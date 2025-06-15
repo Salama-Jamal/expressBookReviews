@@ -13,12 +13,31 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  public_users.post("/register", (req,res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  if (!username || !password) {
+    return res.status(400).json({message: "Username and password are required"});
+  }
+
+  if (users[username]) {
+    return res.status(409).json({message: "Username already exists"});
+  }
+
+  users[username] = {password: password};
+  req.session.authorization = {
+    accessToken: jwt.sign({data: password}, 'access', {expiresIn: 60 * 60})
+  };
+  
+  return res.status(200).json({message: "User successfully registered"});
+});
+  res.send(JSON.stringify(books, null, 4));
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  //Write your code here
+  //Write your code here`
   return res.status(300).json({message: "Yet to be implemented"});
  });
   
